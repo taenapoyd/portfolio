@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naira Nafisah – Network & Cybersecurity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0F1E;
+      --bg2: #111827;
+      --bg3: #1a2235;
+      --accent: #00D4B8;
+      --accent2: #0099FF;
+      --text: #F0F6FF;
+      --sub: #8892A4;
+      --border: rgba(0, 212, 184, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 2.5rem;
+      background: rgba(10,15,30,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--sub);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,184,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,184,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,184,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 860px; width: 100%;
+      text-align: center;
+    }
+
+    /* Terminal window */
+    .terminal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: left;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,184,0.08);
+    }
+
+    .terminal-bar {
+      background: var(--bg3);
+      padding: 0.75rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #FF5F57; }
+    .dot-y { background: #FEBC2E; }
+    .dot-g { background: #28C840; }
+
+    .terminal-title {
+      margin-left: auto; margin-right: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--sub);
+    }
+
+    .terminal-body {
+      padding: 1.25rem 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.9;
+      min-height: 210px;
+    }
+
+    .prompt { color: var(--accent); }
+    .cmd { color: #A3BE8C; }
+    .out { color: var(--sub); }
+    .val { color: var(--text); }
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-name span { color: var(--accent); }
+
+    .hero-tagline {
+      font-size: 1.1rem;
+      color: var(--sub);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--accent);
+      background: rgba(0,212,184,0.06);
+      letter-spacing: 0.04em;
+    }
+
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid transparent;
+    }
+    .btn-primary:hover { background: #00ecd0; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,184,0.3); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2rem; max-width: 1000px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+
+    .divider {
+      width: 48px; height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--sub);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .about-text p strong { color: var(--text); font-weight: 500; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover { border-color: var(--accent); }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--sub); margin-top: 0.3rem; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.25s;
+    }
+
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+    .skill-card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .skill-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: var(--text);
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .skill-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      background: rgba(0,212,184,0.08);
+      color: var(--accent);
+      border: 1px solid rgba(0,212,184,0.2);
+    }
+
+    /* ── EXPERIENCE ── */
+    .timeline { position: relative; padding-left: 2rem; }
+
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    .timeline-item { position: relative; margin-bottom: 2.5rem; }
+
+    .timeline-dot {
+      position: absolute; left: -2.45rem; top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(0,212,184,0.5);
+    }
+
+    .timeline-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-role {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-org {
+      font-size: 0.85rem;
+      color: var(--sub);
+      margin-bottom: 0.8rem;
+    }
+
+    .timeline-desc {
+      color: var(--sub);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .timeline-desc li { margin-bottom: 0.3rem; padding-left: 1rem; }
+    .timeline-desc li::marker { color: var(--accent); }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.25s;
+      display: flex; flex-direction: column;
+    }
+
+    .project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+    .project-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .project-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .project-desc {
+      font-size: 0.85rem;
+      color: var(--sub);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+
+    /* ── CERTS ── */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .cert-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .cert-card:hover { border-color: var(--accent); }
+
+    .cert-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .cert-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .cert-issuer {
+      font-size: 0.78rem;
+      color: var(--sub);
+    }
+
+    .cert-grade {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-top: 0.3rem;
+    }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+    #contact .section-title { margin-bottom: 0.8rem; }
+    #contact p { color: var(--sub); margin-bottom: 2rem; }
+
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      background: var(--bg2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--sub);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { gap: 1rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: 2.2rem; }
+      .terminal-body { font-size: 0.72rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor { animation: none; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">~/naira-nafisah</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="padding: 0; max-width: none;">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span class="terminal-title">naira@portfolio ~ bash</span>
+      </div>
+      <div class="terminal-body" id="terminal-output"></div>
+    </div>
+
+    <h1 class="hero-name">Naira <span>Nafisah</span></h1>
+    <p class="hero-tagline">Network Engineer · Cybersecurity Enthusiast · IT Trainer</p>
+
+    <div class="hero-badges">
+      <span class="badge">MTCNA Certified</span>
+      <span class="badge">MTCRE Certified</span>
+      <span class="badge">Mikrotik</span>
+      <span class="badge">Penetration Testing</span>
+      <span class="badge">OSPF · Load Balancing</span>
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Get in Touch</a>
+      <a href="https://linkedin.com/in/naira-nafisah" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">// 01 — about</p>
+  <h2 class="section-title">Tentang Saya</h2>
+  <div class="divider"></div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        Mahasiswi aktif <strong>Sistem Informasi Universitas Bakrie</strong> (IPK 3.64) dengan fokus pada
+        jaringan komputer dan keamanan siber. Saya percaya infrastruktur yang kuat adalah fondasi dari setiap sistem digital yang handal.
+      </p>
+      <p>
+        Berpengalaman sebagai <strong>IT Trainer</strong> — mengajar 45 mahasiswa tentang konfigurasi Mikrotik,
+        troubleshooting jaringan, dan simulasi dengan VMware & PNETLab. Saya mendokumentasikan
+        perjalanan belajar saya di <strong>Medium</strong> dan terus mengasah skill melalui bootcamp, CTF, dan lab.
+      </p>
+      <p>
+        Berkomitmen untuk terus belajar dan berkontribusi nyata di bidang <strong>networking</strong> dan
+        <strong>cybersecurity</strong>.
+      </p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">3.64</div>
+        <div class="stat-label">IPK Universitas Bakrie</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">45</div>
+        <div class="stat-label">Mahasiswa diajar sebagai IT Trainer</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Sertifikasi MikroTik (MTCNA & MTCRE)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Sertifikat profesional diraih</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">// 02 — skills</p>
+  <h2 class="section-title">Keahlian</h2>
+  <div class="divider"></div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-icon">🔀</div>
+      <div class="skill-card-title">Routing & Switching</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Static Routing</span>
+        <span class="skill-tag">OSPF</span>
+        <span class="skill-tag">RIP</span>
+        <span class="skill-tag">VLAN</span>
+        <span class="skill-tag">Load Balancing</span>
+        <span class="skill-tag">Failover</span>
+        <span class="skill-tag">Wireless</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🛡️</div>
+      <div class="skill-card-title">Network Security</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Firewall NAT</span>
+        <span class="skill-tag">Queue Tree</span>
+        <span class="skill-tag">Access Control</span>
+        <span class="skill-tag">DHCP</span>
+        <span class="skill-tag">DNS</span>
+        <span class="skill-tag">Hotspot Config</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">⚔️</div>
+      <div class="skill-card-title">Cybersecurity</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Pentesting</span>
+        <span class="skill-tag">Threat Hunting</span>
+        <span class="skill-tag">Log Analysis</span>
+        <span class="skill-tag">Digital Forensics</span>
+        <span class="skill-tag">CTF</span>
+        <span class="skill-tag">NIST SP 800-115</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🛠️</div>
+      <div class="skill-card-title">Tools & Software</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Wireshark</span>
+        <span class="skill-tag">Burp Suite</span>
+        <span class="skill-tag">Metasploit</span>
+        <span class="skill-tag">Nmap</span>
+        <span class="skill-tag">Hydra</span>
+        <span class="skill-tag">PNETLab</span>
+        <span class="skill-tag">VMware</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">💻</div>
+      <div class="skill-card-title">Scripting & Dev</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Bash</span>
+        <span class="skill-tag">HTML/CSS</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">VB.NET</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🤝</div>
+      <div class="skill-card-title">Soft Skills</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Teamwork</span>
+        <span class="skill-tag">Problem Solving</span>
+        <span class="skill-tag">Komunikasi</span>
+        <span class="skill-tag">Manajemen Waktu</span>
+        <span class="skill-tag">Adaptasi Cepat</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">// 03 — experience</p>
+  <h2 class="section-title">Pengalaman</h2>
+  <div class="divider"></div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Oct 2024 – Jan 2026</div>
+      <div class="timeline-role">IT Trainer – Jaringan Komputer</div>
+      <div class="timeline-org">Universitas Bakrie</div>
+      <ul class="timeline-desc">
+        <li>Mengajar praktikum untuk 45 mahasiswa semester 1 (2 jam/minggu) selama 1 semester penuh</li>
+        <li>Mengajarkan dasar-dasar MTCNA menggunakan VMware dan PNETLab untuk simulasi interaktif Mikrotik</li>
+        <li>Memberikan dukungan teknis langsung: troubleshooting koneksi jaringan, konfigurasi Mikrotik, dan printer</li>
+        <li>Mendokumentasikan setup konfigurasi dan hasil troubleshooting untuk kebutuhan evaluasi dosen</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Jun 2025 – Agu 2025</div>
+      <div class="timeline-role">Bootcamp Cyber Security</div>
+      <div class="timeline-org">ID Networkers (IDN)</div>
+      <ul class="timeline-desc">
+        <li>Mempelajari cyber security dari dasar hingga lanjutan: jaringan, Linux security, kriptografi, pentesting, firewall, cloud security</li>
+        <li>Melakukan eksploitasi sistem uji (DVWA, InsecureBankV2, DVAPI, Metasploitable2) dengan black-box approach</li>
+        <li>Berlatih melalui simulasi SOC dan CTF untuk kemampuan eksploitasi dan threat detection</li>
+        <li>Mendokumentasikan hasil praktik dan rekomendasi mitigasi melalui Medium dan LinkedIn</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Jan 2024</div>
+      <div class="timeline-role">Pelatihan & Sertifikasi MikroTik MTCNA & MTCRE</div>
+      <div class="timeline-org">ID Networkers (IDN)</div>
+      <ul class="timeline-desc">
+        <li>Menerapkan load balancing dan failover antar dua ISP untuk menjaga kestabilan koneksi</li>
+        <li>Mengelola bandwidth dengan Queue Tree dan Simple Queue sesuai prioritas layanan</li>
+        <li>Mengarahkan trafik menggunakan routing policy dan mark routing</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Agu 2019 – Sep 2023</div>
+      <div class="timeline-role">Komisi V – HUMAS</div>
+      <div class="timeline-org">Senat Mahasiswa Universitas Bakrie</div>
+      <ul class="timeline-desc">
+        <li>Bertanggung jawab atas perencanaan dan publikasi konten Instagram resmi Senat Mahasiswa</li>
+        <li>Mengelola perizinan seluruh konten yang dipublikasikan oleh Ormawa di lingkungan universitas</li>
+        <li>Merumuskan regulasi terkait publikasi dan komunikasi antar-Ormawa</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">// 04 — projects</p>
+  <h2 class="section-title">Proyek & Lab</h2>
+  <div class="divider"></div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-type">Networking · 2024</div>
+      <div class="project-title">ZANAC NET – WiFi Voucher System</div>
+      <div class="project-desc">
+        Membangun sistem voucher WiFi menggunakan RouterBoard Mikrotik dengan halaman login custom berbasis HTML/CSS.
+        Menangani troubleshooting jaringan dan mendokumentasikan seluruh konfigurasi sistem.
+      </div>
+      <div class="project-tech">
+        <span class="skill-tag">Mikrotik RouterBoard</span>
+        <span class="skill-tag">HTML/CSS</span>
+        <span class="skill-tag">Hotspot</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">Networking · 2024 – Sekarang</div>
+      <div class="project-title">Simulasi Jaringan Mikrotik – MiniLab & SuperLab</div>
+      <div class="project-desc">
+        Konfigurasi load balancing & failover dua ISP, static routing, OSPF, dan bandwidth management dengan
+        Queue Tree. Mendokumentasikan setiap proses melalui blog pribadi.
+      </div>
+      <div class="project-tech">
+        <span class="skill-tag">OSPF</span>
+        <span class="skill-tag">Load Balancing</span>
+        <span class="skill-tag">Queue Tree</span>
+        <span class="skill-tag">PNETLab</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">Cybersecurity · 2025</div>
+      <div class="project-title">Penetration Testing – Vulnerable Systems</div>
+      <div class="project-desc">
+        Eksploitasi sistem uji (DVWA, InsecureBankV2, Metasploitable2) menggunakan full toolset: Burp Suite,
+        Metasploit, Nmap, Hydra. Simulasi SOC dan CTF dengan pendekatan standar NIST SP 800-115.
+      </div>
+      <div class="project-tech">
+        <span class="skill-tag">Burp Suite</span>
+        <span class="skill-tag">Metasploit</span>
+        <span class="skill-tag">Nmap</span>
+        <span class="skill-tag">Wireshark</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <p class="section-label">// 05 — certifications</p>
+  <h2 class="section-title">Sertifikasi</h2>
+  <div class="divider"></div>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">MikroTik Certified Network Associate</div>
+        <div class="cert-issuer">MikroTik · 2024</div>
+        <div class="cert-grade">ID: 2401NA3400</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">MikroTik Certified Routing Engineer</div>
+        <div class="cert-issuer">MikroTik · 2024</div>
+        <div class="cert-grade">ID: 2401RE3885</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🎓</div>
+      <div>
+        <div class="cert-name">Foundations of Cybersecurity</div>
+        <div class="cert-issuer">Coursera · 2024</div>
+        <div class="cert-grade">Grade: 96%</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🎓</div>
+      <div>
+        <div class="cert-name">Play It Safe: Manage Security Risks</div>
+        <div class="cert-issuer">Coursera · 2024</div>
+        <div class="cert-grade">Grade: 94%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="text-align: center;">
+  <p class="section-label">// 06 — contact</p>
+  <h2 class="section-title">Let's Connect</h2>
+  <div class="divider" style="margin: 0 auto 1.5rem;"></div>
+  <p style="color: var(--sub); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto;">
+    Terbuka untuk peluang magang, kolaborasi proyek, atau sekadar ngobrol soal networking dan cybersecurity.
+  </p>
+  <div class="contact-links">
+    <a href="mailto:naira.nafisah77@gmail.com" class="contact-link">✉️ Email</a>
+    <a href="https://linkedin.com/in/naira-nafisah" target="_blank" class="contact-link">💼 LinkedIn</a>
+    <a href="https://medium.com/@pythonbakar" target="_blank" class="contact-link">✍️ Blog</a>
+    <a href="http://bit.ly/3IfoNii" target="_blank" class="contact-link">🗂️ Portfolio</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Naira Nafisah · Built with passion for networks & security</p>
+</footer>
+
+<!-- TERMINAL ANIMATION -->
+<script>
+  const lines = [
+    { text: '$ whoami', type: 'prompt', delay: 400 },
+    { text: 'naira.nafisah — Information Systems @ Universitas Bakrie', type: 'out', delay: 600 },
+    { text: '$ cat skills.conf', type: 'prompt', delay: 900 },
+    { text: 'Networking: Mikrotik | OSPF | Load Balancing | Failover', type: 'out', delay: 1100 },
+    { text: 'Security:   Pentesting | Threat Hunting | CTF | Forensics', type: 'out', delay: 1300 },
+    { text: 'Certs:      MTCNA ✓ | MTCRE ✓ | Coursera Cybersecurity ✓', type: 'out', delay: 1500 },
+    { text: '$ echo $STATUS', type: 'prompt', delay: 1900 },
+    { text: 'Open to opportunities · Always learning · Ready to deploy 🚀', type: 'val', delay: 2100 },
+  ];
+
+  const output = document.getElementById('terminal-output');
+  let lineIndex = 0;
+
+  function typeChar(lineEl, text, charIndex, cb) {
+    if (charIndex < text.length) {
+      lineEl.textContent += text[charIndex];
+      setTimeout(() => typeChar(lineEl, text, charIndex + 1, cb), 22);
+    } else {
+      cb && cb();
+    }
+  }
+
+  function renderLine() {
+    if (lineIndex >= lines.length) {
+      const cursorEl = document.createElement('span');
+      cursorEl.className = 'cursor';
+      output.appendChild(cursorEl);
+      return;
+    }
+    const item = lines[lineIndex++];
+    setTimeout(() => {
+      const lineEl = document.createElement('div');
+      const prefix = item.type === 'prompt' ? '' : '';
+      lineEl.className = item.type;
+      output.appendChild(lineEl);
+      typeChar(lineEl, item.text, 0, renderLine);
+    }, item.delay - (lineIndex > 1 ? lines[lineIndex - 2].delay : 0));
+  }
+
+  setTimeout(renderLine, 300);
+</script>
+
+</body>
+</html>
