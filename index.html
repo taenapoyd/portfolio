@@ -490,13 +490,82 @@
       color: var(--sub);
     }
 
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
     /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
       nav { padding: 1rem 1.2rem; }
-      .nav-links { gap: 1rem; }
-      .about-grid { grid-template-columns: 1fr; }
-      .hero-name { font-size: 2.2rem; }
-      .terminal-body { font-size: 0.72rem; }
+      .nav-hamburger { display: flex; }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        position: fixed;
+        top: 57px; left: 0; right: 0;
+        background: rgba(10,15,30,0.97);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem 0 1rem;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 0.85rem 1.5rem;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+      }
+
+      #hero { padding: 5rem 1.2rem 2rem; min-height: 100svh; }
+      .hero-inner { max-width: 100%; }
+      .hero-name { font-size: clamp(2rem, 8vw, 2.8rem); }
+      .hero-tagline { font-size: 0.95rem; }
+      .hero-ctas { flex-direction: column; align-items: center; }
+      .hero-ctas .btn { width: 100%; max-width: 280px; justify-content: center; }
+
+      .terminal-body { font-size: 0.7rem; padding: 1rem; min-height: 170px; }
+      .terminal-bar { padding: 0.6rem 0.9rem; }
+
+      section { padding: 4rem 1.2rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+
+      .skills-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .certs-grid { grid-template-columns: 1fr; }
+
+      .timeline { padding-left: 1.5rem; }
+      .timeline-dot { left: -1.95rem; }
+
+      .contact-links { flex-direction: column; align-items: center; }
+      .contact-link { width: 100%; max-width: 280px; justify-content: center; }
+    }
+
+    @media (max-width: 400px) {
+      .about-stats { grid-template-columns: 1fr; }
+      .hero-badges { gap: 0.4rem; }
+      .badge { font-size: 0.65rem; padding: 0.28rem 0.65rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -510,7 +579,10 @@
 <!-- NAV -->
 <nav>
   <span class="nav-logo">~/naira-nafisah</span>
-  <ul class="nav-links">
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -561,7 +633,7 @@
   <div class="about-grid">
     <div class="about-text">
       <p>
-        Mahasiswi aktif <strong>Sistem Informasi Universitas Bakrie</strong> (IPK 3.64) dengan fokus pada
+        Mahasiswi aktif <strong>Sistem Informasi Universitas Bakrie</strong>  dengan fokus pada
         jaringan komputer dan keamanan siber. Saya percaya infrastruktur yang kuat adalah fondasi dari setiap sistem digital yang handal.
       </p>
       <p>
@@ -575,10 +647,6 @@
       </p>
     </div>
     <div class="about-stats">
-      <div class="stat-card">
-        <div class="stat-num">3.64</div>
-        <div class="stat-label">IPK Universitas Bakrie</div>
-      </div>
       <div class="stat-card">
         <div class="stat-num">45</div>
         <div class="stat-label">Mahasiswa diajar sebagai IT Trainer</div>
@@ -894,6 +962,22 @@
   }
 
   setTimeout(renderLine, 300);
+</script>
+
+<!-- HAMBURGER -->
+<script>
+  const btn = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      btn.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
 </script>
 
 </body>
